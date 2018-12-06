@@ -1,0 +1,105 @@
+# depslib dependency file v1.0
+1541686035 source:c:\users\victo\desktop\mousetrap\functions.c
+	"functions.h"
+
+1541684913 c:\users\victo\desktop\mousetrap\functions.h
+	<stdio.h>
+	<strings.h>
+	<conio2.h>
+	<stdlib.h>
+	<ctype.h>
+	<time.h>
+	<math.h>
+	<windows.h>
+
+1541686633 source:c:\users\victo\desktop\mousetrap\main.c
+	"functions.h"
+
+1542793000 source:d:\importante\mousetrap\functions.c
+	"functions.h"
+
+1542791596 d:\importante\mousetrap\functions.h
+	<stdio.h>
+	<strings.h>
+	<conio2.h>
+	<stdlib.h>
+	<ctype.h>
+	<time.h>
+	<math.h>
+	<windows.h>
+
+1542799996 source:d:\importante\mousetrap\main.c
+	"functions.h"
+
+1543193688 source:d:\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\functions.c
+	"functions.h"
+
+1542791596 d:\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\functions.h
+	<stdio.h>
+	<strings.h>
+	<conio2.h>
+	<stdlib.h>
+	<ctype.h>
+	<time.h>
+	<math.h>
+	<windows.h>
+
+1543196186 source:d:\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\interface.c
+	"functions.h"
+
+1543196290 source:d:\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\main.c
+	"functions.h"
+
+1543250334 source:c:\users\victo\desktop\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\interface.c
+	"functions.h"
+
+1543351975 c:\users\victo\desktop\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\functions.h
+	<stdio.h>
+	<strings.h>
+	<conio2.h>
+	<stdlib.h>
+	<ctype.h>
+	<time.h>
+	<math.h>
+	<windows.h>
+
+1543359804 source:c:\users\victo\desktop\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\functions.c
+	"functions.h"
+
+1543353056 source:c:\users\victo\desktop\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\main.c
+	"functions.h"
+
+1543526718 source:c:\users\victo\desktop\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\archive.c
+	"functions.h"
+
+1543527021 source:c:\users\victo\desktop\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\movement.c
+	"functions.h"
+
+1543609371 source:c:\users\victo\desktop\projetos pessoais\trabalho final_algeprog (melhorar)\mousetrap\others.c
+	"functions.h"
+
+1543526718 source:c:\users\victo\desktop\projetos pessoais\mousetrap\archive.c
+	"functions.h"
+
+1544120478 c:\users\victo\desktop\projetos pessoais\mousetrap\functions.h
+	<stdio.h>
+	<strings.h>
+	<conio2.h>
+	<stdlib.h>
+	<ctype.h>
+	<time.h>
+	<math.h>
+	<windows.h>
+
+1543250334 source:c:\users\victo\desktop\projetos pessoais\mousetrap\interface.c
+	"functions.h"
+
+1543527021 source:c:\users\victo\desktop\projetos pessoais\mousetrap\movement.c
+	"functions.h"
+
+1544121417 source:c:\users\victo\desktop\projetos pessoais\mousetrap\main.c
+	"functions.h"
+
+1544121851 source:c:\users\victo\desktop\projetos pessoais\mousetrap\others.c
+	"functions.h"
+
