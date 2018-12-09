@@ -1,40 +1,43 @@
 // Victoria de Avelar Duarte e Henrique Werner Delazeri
 
-/* O programa é um jogo inspirado no jogo de Atari Mouse Trap*/
+/* O programa é um jogo inspirado no jogo de Atari Mouse Trap */
+
+/* Inicialmente o projeto foi apresentado como o trabalho final da cadeira de Algoritmos e Programação. 
+   Após a entrega do trabalho, o projeto foi continuado e melhorado. */
 
 
 #include "functions.h"
 
-// Main
+/* ----------// Main //---------- */
 int main() {
-    // Declaração de variáveis
+    /* Declaração de variáveis */
     Estado estado_atual = {{"", {0, 0}, {0, 0}, 0, NUM_VIDAS, 0, NUM_OSSOS, 0},
-                          {{0,0}, {0,0}, 0, 1, 0, 0, {0,0}, {0,0}, 0, 1, 0, 0, {0,0}, {0,0}, 0, 1, 0, 0, {0,0}, {0,0}, 0, 1, 0, 0},
-                          {{0,0}, {0,0}, {0,0}, {0,0}, {0,0}, {0,0}, {0,0}},
-                          1, 0};
+                          {{{0,0}, {0,0}, 0, 1, 0, 0}, {{0,0}, {0,0}, 0, 1, 0, 0}, {{0,0}, {0,0}, 0, 1, 0, 0}, {{0,0}, {0,0}, 0, 1, 0, 0}},
+                          {{{0,0}}, {{0,0}}, {{0,0}}, {{0,0}}, {{0,0}}, {{0,0}}, {{0,0}}}, 
+                          {0}, 1, 0};
 
+    clock_t tempo_inicial, tempo_decorrido;
+    
     char mapa[LINHAS_MAPA][COLUNAS_MAPA];
+    
+    char tecla_press;
+    char resp, resp_aux;
 
     int status_pause = 0;
     int status_passou_nivel = 1;
     int novo_jogo = 1;
-
-    char char_nivel[NOME_ARQUIVO];
-
-    char tecla_press;
-    char resp, resp_aux;
-    int i, j, k;
-
-    clock_t tempo_inicial, tempo_decorrido;
+    int option_save;
 
 
+    /* Configurações iniciais */
     // Deixa a janela de um tamanho especifico
     system("mode 105,30");
 
     // Remove o cursor da janela
     removeCursor();
 
-    //Loop do jogo
+
+    /* Loop do jogo */
     do {
         // Menu inicial do jogo
         if(novo_jogo == 1){
@@ -195,7 +198,16 @@ int main() {
                     break;
                 //Salva jogo
                 case 75:
-                    salvaJogo(mapa, estado_atual);
+                    GetLocalTime(&estado_atual.actual_time);
+
+                    option_save = selecionaSlot(estado_atual.actual_time);
+
+                    printf("Opcao escolhida: %d", option_save);
+
+                    clrscr();
+                    desenhaInterface();
+
+                    salvaJogo(mapa, estado_atual, option_save);
 
                     // Verifica se o jogador deseja continuar no jogo atual
                     do{
@@ -222,7 +234,14 @@ int main() {
                     break;
                 // Carrega jogo
                 case 76:
-                    carregaJogo(mapa, &estado_atual);
+                    option_save = selecionaSlot(estado_atual.actual_time);
+
+                    printf("Opcao escolhida: %d", option_save);
+
+                    clrscr();
+                    desenhaInterface();
+
+                    carregaJogo(mapa, &estado_atual, option_save);
 
                     status_pause = 0;
                     estado_atual.jogador.status_cachorro = 0;
@@ -243,7 +262,7 @@ int main() {
 
             desenhaPassaNivel();
 
-            Sleep(2000);
+            getch();
         }
 
         // Verifica condição de derrota do jogador (vidas = 0)

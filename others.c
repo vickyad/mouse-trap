@@ -1,7 +1,7 @@
 #include "functions.h"
 
-/* Telas */
-// Tela da parte inicial do jogo
+/* ----------// Telas //---------- */
+/* Tela da parte inicial do jogo */
 void inicio(Estado *estado_atual){
     int flag = 0;
 
@@ -11,14 +11,17 @@ void inicio(Estado *estado_atual){
     desenhaInicio();
 
     do{
+        // Guarda o nome digitado pelo jogador
         fflush(stdin);
         gets(estado_atual->jogador.nome);
 
+        // Verifica se o nome é grande ou pequeno demais
         if(strlen(estado_atual->jogador.nome) > NOME_MAX || strlen(estado_atual->jogador.nome) < 1){
             desenhaInterface();
 
             desenhaRetangulo();
 
+            // Caso o nome seja muito grande
             if(strlen(estado_atual->jogador.nome) > NOME_MAX){
                 gotoxy(18, 14);
                 printf("Uau, mas que nome bonito, pena que %c", 130);
@@ -29,6 +32,7 @@ void inicio(Estado *estado_atual){
 
                 flag = 1;
             } else {
+            // Caso o nome seja muito pequeno
                 if(flag == 0){
                     gotoxy(18,14);
                     printf("N%co precisa se preocupar, n%co vamos", 198, 198);
@@ -39,6 +43,7 @@ void inicio(Estado *estado_atual){
 
                     flag = 2;
                 } else {
+                    // Caso anteriormente o jogador tenha digitado um nome grande demais
                     gotoxy(18,14);
                     printf("Bom, agora %c um pouco pequeno", 130);
                     gotoxy(18, 15);
@@ -54,7 +59,8 @@ void inicio(Estado *estado_atual){
             desenhaInicio();
         }
     } while(strlen(estado_atual->jogador.nome) > NOME_MAX || strlen(estado_atual->jogador.nome) < 1);
-
+    
+    // Caso o primeiro nome digitado tenha sido pequeno demais
     if(flag == 2){
         gotoxy(18,14);
         printf("Rah, que nome fe... Quer dizer,");
@@ -68,14 +74,69 @@ void inicio(Estado *estado_atual){
     }
 }
 
+/* Tela dos slots de save */
+int selecionaSlot(SYSTEMTIME actual_time){
+    Estado game_data;
 
-/* Obtencao de coordenadas */
+    int option = 1;
+    int flag = 0;
+    char tecla;
+
+    clrscr();
+    desenhaInterface();
+
+    desenhaSlots(game_data);
+    desenhaSetas(option, game_data);
+
+    do {
+        tecla = getch();
+
+        switch(tecla){
+            // Cima
+            case 72:
+                apagaSetas(option, game_data);
+
+                if(option == 1){
+                    option = 3;
+                } else {
+                    option --;
+                }
+
+                desenhaSetas(option, game_data);
+
+                break;
+            // Baixo
+            case 80:
+                apagaSetas(option, game_data);
+
+                if(option == 3){
+                    option = 1;
+                } else {
+                    option ++;
+                }
+
+                desenhaSetas(option, game_data);
+                break;
+            // Enter
+            case 13:
+                flag = 1;
+                break;
+        }
+    } while(flag == 0);
+
+    return option;
+}
+
+
+/* ----------// Obtencao de coordenadas //---------- */
 void localizaPosicoes(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual) {
     int i, j, k = 0, l = 0;
 
     for (j = 0; j < COLUNAS_MAPA; j++) {
         for (i = 0; i < LINHAS_MAPA; i++) {
+            // Verifica qual o caractere contido na posição (i, j) da matriz
             switch(mapa[i][j]){
+                // Rato
                 case 'M':
                     estado_atual->jogador.pos_inicial.x = j;
                     estado_atual->jogador.pos_inicial.y = i;
@@ -84,10 +145,7 @@ void localizaPosicoes(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual
                     estado_atual->jogador.pos_atual.y = i;
 
                     break;
-                case 'Q':
-                    estado_atual->jogador.qtd_queijos++;
-
-                    break;
+                // Gato
                 case 'G':
                     estado_atual->gato[k].pos_inicial.x = j;
                     estado_atual->gato[k].pos_inicial.y = i;
@@ -98,6 +156,12 @@ void localizaPosicoes(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual
                     k++;
 
                     break;
+                // Queijo
+                case 'Q':
+                    estado_atual->jogador.qtd_queijos++;
+
+                    break;
+                // Porta
                 case 'T':
                     estado_atual->porta[l].pos_porta.x = j;
                     estado_atual->porta[l].pos_porta.y = i;
@@ -111,8 +175,20 @@ void localizaPosicoes(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual
 }
 
 
-/* Outras funcoes */
-// Gera um numero aleatorio de 0 a 3
+/* ----------// Outras funcoes //---------- */
+/* Remove o cursor da tela */
+void removeCursor(){
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO info;
+   
+    info.dwSize = 100;
+    info.bVisible = FALSE;
+   
+    SetConsoleCursorInfo(consoleHandle, &info);
+}
+
+
+/* Gera um numero aleatorio de 0 a 3 */
 int geraNumero(){
     srand(time(NULL));
     int num;
@@ -122,37 +198,9 @@ int geraNumero(){
     return num;
 }
 
-// Remove o cursor da tela
-void removeCursor(){
-    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO info;
-    info.dwSize = 100;
-    info.bVisible = FALSE;
-    SetConsoleCursorInfo(consoleHandle, &info);
-}
 
-// Testando
-void leRanking(FILE *arq, SAVE ranking[MAX_SAVES]){
-    int i = 0;
-
-    while (!feof(arq) && i < MAX_SAVES){
-        fread(&ranking[i], sizeof(SAVE), 1, arq);
-
-        i++;
-    }
-}
-
-void salvaRanking(FILE *arq, SAVE ranking[MAX_SAVES]){
-    int i = 0;
-
-    while(i < MAX_SAVES){
-        fwrite(&ranking[i], sizeof(SAVE), 1, arq);
-
-        i++;
-    }
-}
-
-int atualizaVetor(SAVE ranking[MAX_SAVES], Jogador last_win){ // na real tem q ser um jogador (estado)
+/* Verifica se a pontuacao obtida esta entre as 10 melhores e salva em caso positivo */
+int atualizaVetor(Save ranking[MAX_SAVES], Jogador last_win){
     int flag = 0;
 
     if(last_win.pontuacao >= ranking[MAX_SAVES - 1].score){
@@ -165,8 +213,10 @@ int atualizaVetor(SAVE ranking[MAX_SAVES], Jogador last_win){ // na real tem q s
     return flag;
 }
 
-void ordenaVetor(SAVE vetor[MAX_SAVES]){
-    SAVE auxiliar;
+
+/* Ordena um vetor em ordem crescente */
+void ordenaVetor(Save vetor[MAX_SAVES]){
+    Save auxiliar;
     int i = 0;
 
     do{
@@ -183,73 +233,4 @@ void ordenaVetor(SAVE vetor[MAX_SAVES]){
 
         i++;
     } while(i < MAX_SAVES - 1);
-}
-
-void atualizaRanking(Jogador last_win){
-    FILE *arq;
-    SAVE ranking[MAX_SAVES] = {{"", 0}, {"", 0}, {"", 0}, {"", 0}, {"", 0}, {"", 0}, {"", 0}, {"", 0}, {"", 0}, {"", 0}};
-    int flag;
-
-    if(!(arq = fopen("ranking.bin", "rb"))){
-        printf("Erro na leitura do arquivo");
-    } else {
-        leRanking(arq, ranking);
-
-        fclose(arq);
-
-        flag = atualizaVetor(ranking, last_win);
-
-        if(flag){
-            ordenaVetor(ranking);
-
-            if(!(arq = fopen("ranking.bin", "wb"))){
-                printf("Erro na escrita do arquivo");
-            } else {
-                salvaRanking(arq, ranking);
-
-                fclose(arq);
-            }
-        }
-    }
-
-    clrscr();
-    desenhaInterface();
-
-    desenha_ranking(ranking);
-
-    getch();
-}
-
-void desenha_ranking(SAVE ranking[MAX_SAVES]){
-    int i = 0, j = 0;
-
-    textbackground(YELLOW);
-
-    for(j = 0; j <= LINHAS_RANKING; j++){
-        if(j == 0 || j == 4 || j == LINHAS_RANKING){
-            for(i = 0; i <= COLUNAS_RANKING; i++){
-                gotoxy(i + 18, j + 9);
-                printf(" ");
-            }
-        } else {
-            gotoxy(18, j + 9);
-            printf(" ");
-
-            gotoxy(COLUNAS_RANKING + 18, j + 9);
-            printf(" ");
-        }
-    }
-
-    textbackground(BLACK);
-
-    for(i = 0; i < MAX_SAVES; i++){
-        gotoxy(20, i + 15);
-        printf("%20s     %6d\n", ranking[i].nome, ranking[i].score);
-    }
-
-    textcolor(RED);
-    gotoxy(32, 11);
-    printf("RANKING");
-
-    textcolor(WHITE);
 }

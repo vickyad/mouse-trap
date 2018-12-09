@@ -1,12 +1,12 @@
 #include "functions.h"
 
-// Movimenta o rato
+/* Movimenta o rato */
 void mexeRato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], int x, int y, clock_t *tempo_inicial, Estado *estado_atual) {
     int k;
 
     // Verifica se nao havera sobreposicao com a parede ou a porta
     if (mapa[estado_atual->jogador.pos_atual.y + y][estado_atual->jogador.pos_atual.x + x] != 'X' && mapa[estado_atual->jogador.pos_atual.y + y][estado_atual->jogador.pos_atual.x + x] != 'T') {
-        // Casos possiveis de sobreposição
+        // Casos possiveis de sobreposicao
         switch(mapa[estado_atual->jogador.pos_atual.y + y][estado_atual->jogador.pos_atual.x + x]){
             // Queijo
             case 'Q':
@@ -16,9 +16,12 @@ void mexeRato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], int x, int y, clock_t *tempo
             // Osso
             case 'O':
                 (estado_atual->jogador.ossos_restantes)--;
+                
+                // Ativa o modo cachorro
                 *tempo_inicial = clock();
                 estado_atual->jogador.status_cachorro = 1;
-
+                
+                // Efeito sonoro
                 Beep(750, 300);
 
                 break;
@@ -27,8 +30,10 @@ void mexeRato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], int x, int y, clock_t *tempo
                 if(estado_atual->jogador.status_cachorro == 1){
                     estado_atual->jogador.pontuacao += 50;
 
+                    // Efeito sonoro
                     Beep(200, 300);
                 } else {
+                    // Efeito sonoro
                     Beep(650, 150);
                     Beep(400, 200);
                 }
@@ -40,9 +45,7 @@ void mexeRato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], int x, int y, clock_t *tempo
         if(mapa[estado_atual->jogador.pos_atual.y + y][estado_atual->jogador.pos_atual.x + x] == 'G'){
             // Verifica se o modo cachorro esta ativado
             if (estado_atual->jogador.status_cachorro == 0) {
-
-                mapa[estado_atual->jogador.pos_atual.y][estado_atual->jogador.pos_atual.x] = ' ';
-
+                // Verifica qual gato colidiu com o rato
                 for(k = 0; k < NUM_GATOS; k++){
                     if(estado_atual->gato[k].pos_atual.x == (estado_atual->jogador.pos_atual.x + x) && estado_atual->gato[k].pos_atual.y == (estado_atual->jogador.pos_atual.y + y)){
                         mapa[estado_atual->gato[k].pos_atual.y][estado_atual->gato[k].pos_atual.x] = ' ';
@@ -60,6 +63,7 @@ void mexeRato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], int x, int y, clock_t *tempo
                 mapa[estado_atual->jogador.pos_atual.y][estado_atual->jogador.pos_atual.x] = 'M';
 
             } else if (estado_atual->jogador.status_cachorro == 1) {
+                // Verifica qual gato colidiu com o rato
                 for(k = 0; k < NUM_GATOS; k++){
                     if(estado_atual->gato[k].pos_atual.x == (estado_atual->jogador.pos_atual.x + x) && estado_atual->gato[k].pos_atual.y == (estado_atual->jogador.pos_atual.y + y)){
                         mapa[estado_atual->gato[k].pos_atual.y][estado_atual->gato[k].pos_atual.x] = ' ';
@@ -85,7 +89,8 @@ void mexeRato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], int x, int y, clock_t *tempo
     }
 }
 
-// Movimenta os gatos
+
+/* Movimenta os gatos */
 void mexeGato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual){
     int x, y, k;
 
@@ -122,7 +127,7 @@ void mexeGato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual){
             if(mapa[estado_atual->gato[k].pos_atual.y + y][estado_atual->gato[k].pos_atual.x + x] == 'X' || mapa[estado_atual->gato[k].pos_atual.y + y][estado_atual->gato[k].pos_atual.x + x] == 'T' || mapa[estado_atual->gato[k].pos_atual.y + y][estado_atual->gato[k].pos_atual.x + x] == 'G'){
                 estado_atual->gato[k].flag = 1;
             } else {
-                // Verifica flag de sobreposição do gato
+                // Verifica flag de sobreposicao do gato
                 switch(estado_atual->gato[k].comeu_queijo){
                     // Verifica se o gato havia se sobreposto a um queijo
                     case 1:
@@ -150,7 +155,7 @@ void mexeGato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual){
                         break;
                     // Rato
                     case 'M':
-                        // Verifica se o modo cachorro está ativado
+                        // Verifica se o modo cachorro esta ativado
                         if (estado_atual->jogador.status_cachorro == 0) {
                             mapa[estado_atual->gato[k].pos_atual.y][estado_atual->gato[k].pos_atual.x] = ' ';
 
@@ -190,9 +195,10 @@ void mexeGato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual){
     }
 }
 
-// Movimenta as portas
+
+/* Movimenta as portas */
 void mexePorta(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual, int *status_portas) {
-    int l, c, k;
+    int k;
 
     // Verifica se as postas se encontram no estado abertas ou fechadas
     if (estado_atual->status_portas == 0) {

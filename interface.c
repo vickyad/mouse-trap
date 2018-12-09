@@ -1,6 +1,7 @@
 #include "functions.h"
 
-// Desenham elementos individualmente
+/* Desenham elementos individualmente */
+// Rato
 void desenhaRato(int x, int y) {
     textcolor(WHITE);
     textbackground(DARKGRAY);
@@ -11,6 +12,7 @@ void desenhaRato(int x, int y) {
     cprintf("uu");
 }
 
+// Cachorro
 void desenhaCachorro(int x, int y){
     textcolor(WHITE);
     textbackground(RED);
@@ -21,44 +23,7 @@ void desenhaCachorro(int x, int y){
     cprintf("uu");
 }
 
-void desenhaQueijo(int x, int y) {
-    textbackground(BLACK);
-    textcolor(YELLOW);
-
-    gotoxy(x, y);
-    cprintf("  ");
-    gotoxy(x, y + 1);
-    cprintf(" .");
-}
-
-void desenhaParede(int x, int y) {
-    textbackground(GREEN);
-
-    gotoxy(x, y);
-    cprintf("  ");
-    gotoxy(x, y + 1);
-    cprintf("  ");
-}
-
-void desenhaOsso(int x, int y) {
-    textbackground(BLACK);
-    textcolor(YELLOW);
-
-    gotoxy(x, y);
-    cprintf("\\/");
-    gotoxy(x, y + 1);
-    cprintf("/\\");
-}
-
-void desenhaPorta(int x, int y) {
-    textbackground(LIGHTGREEN);
-
-    gotoxy(x, y);
-    cprintf("  ");
-    gotoxy(x, y + 1);
-    cprintf("  ");
-}
-
+// Gato
 void desenhaGato(int x, int y) {
     textbackground(WHITE);
     textcolor(BLACK);
@@ -69,7 +34,50 @@ void desenhaGato(int x, int y) {
     cprintf("uu");
 }
 
-// Desenha o mapa a partir da matriz
+// Queijo
+void desenhaQueijo(int x, int y) {
+    textbackground(BLACK);
+    textcolor(YELLOW);
+
+    gotoxy(x, y);
+    cprintf("  ");
+    gotoxy(x, y + 1);
+    cprintf(" .");
+}
+
+// Osso
+void desenhaOsso(int x, int y) {
+    textbackground(BLACK);
+    textcolor(YELLOW);
+
+    gotoxy(x, y);
+    cprintf("\\/");
+    gotoxy(x, y + 1);
+    cprintf("/\\");
+}
+
+// Porta
+void desenhaPorta(int x, int y) {
+    textbackground(LIGHTGREEN);
+
+    gotoxy(x, y);
+    cprintf("  ");
+    gotoxy(x, y + 1);
+    cprintf("  ");
+}
+
+// Parede
+void desenhaParede(int x, int y) {
+    textbackground(GREEN);
+
+    gotoxy(x, y);
+    cprintf("  ");
+    gotoxy(x, y + 1);
+    cprintf("  ");
+}
+
+
+/* Desenha o mapa a partir da matriz */
 void desenhaMapa(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado estado_atual) {
     int x = 7;
     int y = 7;
@@ -79,28 +87,36 @@ void desenhaMapa(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado estado_atual) {
         x = 7;
 
         for (c = 0; c < COLUNAS_MAPA; c++) {
+            // Verifica qual o char encontrado para imprimi-lo na cor correspondente
             switch (mapa[l][c]) {
+                // Rato
                 case 'M':
+                    // Verifica se o status cachorro está ativado
                     if(estado_atual.jogador.status_cachorro == 1){
                         desenhaCachorro(x, y);
                     } else {
                         desenhaRato(x, y);
                     }
                     break;
-                case 'T':
-                    desenhaPorta(x, y);
-                    break;
+                // Gato
                 case 'G':
                     desenhaGato(x, y);
                     break;
+                // Queijo
+                case 'Q':
+                    desenhaQueijo(x, y);
+                    break;
+                // Osso
                 case 'O':
                     desenhaOsso(x, y);
                     break;
+                // Porta
+                case 'T':
+                    desenhaPorta(x, y);
+                    break;
+                // Parede
                 case 'X':
                     desenhaParede(x, y);
-                    break;
-                case 'Q':
-                    desenhaQueijo(x, y);
                     break;
                 default:
                     textbackground(BLACK);
@@ -117,60 +133,45 @@ void desenhaMapa(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado estado_atual) {
         y += 2;
     }
 
+    // Retorna as cores default
     textbackground(BLACK);
     textcolor(WHITE);
 }
 
-// Desenha retangulo que contem mensagens ao jogador
+
+/* Desenha retangulo que contem mensagens ao jogador */
 void desenhaRetangulo(){
     int i, j;
     int x = 14, y = 11;
 
-    for (j = 1; j < LINHAS_INTERFACE_RETANG - 1; j++) {
-        gotoxy(x, y);
+    textbackground(YELLOW);
 
-        for (i = 0; i < COLUNAS_INTERFACE_RETANG; i++) {
-            if (i == 0 || i == COLUNAS_INTERFACE_RETANG - 1) {
-                textbackground(YELLOW);
-            } else {
-                textbackground(BLACK);
+    for(j = 0; j <= LINHAS_INTERFACE_RETANG; j++){
+        if(j == 0 || j == LINHAS_INTERFACE_RETANG){
+            for(i = 0; i <= COLUNAS_INTERFACE_RETANG; i++){
+                gotoxy(i + 14, j + 11);
+                printf(" ");
             }
+        } else {
+            gotoxy(14, j + 11);
+            printf(" ");
 
-            cprintf(" ");
+            gotoxy(COLUNAS_INTERFACE_RETANG + 14, j + 11);
+            printf(" ");
         }
-
-        y++;
-
-        printf("\n");
     }
 
-
-    gotoxy(x, y);
-
-    for (i = 0; i < COLUNAS_INTERFACE_RETANG; i++) {
-        textbackground(YELLOW);
-        cprintf(" ");
-    }
-
-
-    x = 14;
-    y = 11;
-
-    gotoxy(x, y);
-
-    for (i = 0; i < COLUNAS_INTERFACE_RETANG; i++) {
-        textbackground(YELLOW);
-        cprintf(" ");
-    }
-
+    // Retorna as cores default
     textbackground(BLACK);
     textcolor(WHITE);
 }
 
-// Desenha esqueleto da interface principal
+
+/* Desenha esqueleto da interface principal */
 void desenhaInterface() {
     int i, j;
 
+    // Desenho da borda
     gotoxy(0, 0);
 
     for (i = 0; i < COLUNAS_TERMINAL; i++) {
@@ -179,7 +180,6 @@ void desenhaInterface() {
     }
 
     printf("\n");
-
 
     for (j = 0; j < 3; j++) {
         for (i = 0; i < COLUNAS_TERMINAL; i++) {
@@ -203,7 +203,6 @@ void desenhaInterface() {
 
     printf("\n");
 
-
     for (i = 0; i < LINHAS_TERMINAL - 6; i++) {
         for (j = 0; j < COLUNAS_TERMINAL; j++) {
             if (j == 0 || j == 69 || j == 104) {
@@ -223,6 +222,7 @@ void desenhaInterface() {
         cprintf(" ");
     }
 
+    // Desenho das opcoes do menu
     textbackground(BLACK);
     gotoxy(5, 3);
     printf("[N] Novo Jogo");
@@ -240,7 +240,8 @@ void desenhaInterface() {
     printf("[ESC] Sair");
 }
 
-// Desenha as informações do jogador
+
+/* Desenha as informações do jogador */
 void desenhaInfo(Estado estado_atual){
     gotoxy(72, 10);
     printf("Jogador: %s", estado_atual.jogador.nome);
@@ -258,6 +259,7 @@ void desenhaInfo(Estado estado_atual){
     printf("%d ossos restantes", estado_atual.jogador.ossos_restantes);
 
     gotoxy(72, 24);
+    // Caso o jogador esteja no modo cachorro, uma mensagem e printada na tela
     if(estado_atual.jogador.status_cachorro == 1){
         textcolor(LIGHTRED);
         printf("Au! Au!");
@@ -267,7 +269,8 @@ void desenhaInfo(Estado estado_atual){
     }
 }
 
-// Desenha a interface inicial do jogo
+
+/* Desenha a mensagem inicial do jogo */
 void desenhaInicio() {
     desenhaRetangulo();
 
@@ -284,12 +287,13 @@ void desenhaInicio() {
     printf("Insira o seu nome: ");
 }
 
-// Desenha a interface de instruções
+
+/* Desenha a interface de instruções */
 void desenhaInstrucoes(){
     clrscr();
     desenhaInterface();
 
-    //Frases
+    // Mensagens
     gotoxy(32,7);
     printf("Instru%c%ces:", 135, 228);
 
@@ -344,8 +348,6 @@ void desenhaInstrucoes(){
     gotoxy(6,26);
     printf("nn%cnn", 94);
 
-
-
     // Gato
     gotoxy(52,17);
     printf("|\\._./|");
@@ -371,7 +373,8 @@ void desenhaInstrucoes(){
     getch();
 }
 
-// Desenha a interface do pause
+
+/* Desenha a mensagem de pause */
 void desenhaPause() {
     desenhaRetangulo();
 
@@ -383,7 +386,8 @@ void desenhaPause() {
     printf("Pressione (TAB) para voltar");
 }
 
-// Desenha a interface de conclusão de nivel
+
+/* Desenha a interface de conclusão de nivel */
 void desenhaPassaNivel(){
     desenhaRetangulo();
 
@@ -393,11 +397,202 @@ void desenhaPassaNivel(){
     gotoxy(18, 15);
     printf("Parab%cns, voc%c passou de n%cvel!", 130, 136, 161);
 
+    // Efeito sonoro
     Beep(800,150);
     Beep(600,150);
     Beep(300,150);
     Beep(200,250);
 }
+
+
+/* Desenha a interface dos slots */
+void desenhaSlots(Estado game_data){
+    FILE *arq;
+    int i = 0, j = 0;
+
+    textbackground(YELLOW);
+
+    // Desenhas o contorno
+    for(j = 0; j <= LINHAS_SLOTS; j++){
+        if(j == 0 || j == 7 || j == 14 || j == LINHAS_SLOTS){
+            for(i = 0; i <= COLUNAS_SLOTS; i++){
+                gotoxy(i + 15, j + 7);
+                printf(" ");
+            }
+        } else {
+            gotoxy(15, j + 7);
+            printf(" ");
+
+            gotoxy(COLUNAS_SLOTS + 15, j + 7);
+            printf(" ");
+        }
+    }
+
+    textbackground(BLACK);
+
+    // Informacoes jogo 1
+    if(!(arq = fopen("Mousetrap_estado_atual1.bin", "r+b"))){
+        gotoxy(19, 9);
+        printf("SLOT VAZIO");
+    } else {
+        fread(&game_data, sizeof(Estado), 1, arq);
+
+        gotoxy(19, 9);
+        puts(game_data.jogador.nome);
+
+        gotoxy(19, 10);
+        printf("Nivel %d", game_data.nivel);
+
+        gotoxy(19, 12);
+        printf("%d/%d/%d - %dh%d", game_data.actual_time.wDay, game_data.actual_time.wMonth, game_data.actual_time.wYear, game_data.actual_time.wHour, game_data.actual_time.wMinute);
+
+        fclose(arq);
+    }
+
+    // Informacoes jogo 2
+    if(!(arq = fopen("Mousetrap_estado_atual2.bin", "r+b"))){
+        gotoxy(19, 16);
+        printf("SLOT VAZIO");
+    } else {
+        fread(&game_data, sizeof(Estado), 1, arq);
+
+        gotoxy(19, 16);
+        puts(game_data.jogador.nome);
+
+        gotoxy(19, 17);
+        printf("Nivel %d", game_data.nivel);
+
+        gotoxy(19, 19);
+        printf("%d/%d/%d - %dh%d", game_data.actual_time.wDay, game_data.actual_time.wMonth, game_data.actual_time.wYear, game_data.actual_time.wHour, game_data.actual_time.wMinute);
+
+        fclose(arq);
+    }
+
+    // Informacoes jogo 3
+    if(!(arq = fopen("Mousetrap_estado_atual3.bin", "r+b"))){
+        gotoxy(19, 23);
+        printf("SLOT VAZIO");
+    } else {
+        fread(&game_data, sizeof(Estado), 1, arq);
+
+        gotoxy(19, 23);
+        puts(game_data.jogador.nome);
+
+        gotoxy(19, 24);
+        printf("Nivel %d", game_data.nivel);
+
+        gotoxy(19, 26);
+        printf("%d/%d/%d - %dh%d", game_data.actual_time.wDay, game_data.actual_time.wMonth, game_data.actual_time.wYear, game_data.actual_time.wHour, game_data.actual_time.wMinute);
+
+        fclose(arq);
+    }
+}
+
+
+/* Desenha as setas na opcao potencial */
+void desenhaSetas(int option, Estado game_data){
+    textcolor(RED);
+    switch(option){
+        case 1:
+            gotoxy(17, 9);
+            printf(">");
+
+            gotoxy(49, 9);
+            printf("<");
+
+            break;
+        case 2:
+            gotoxy(17, 16);
+            printf(">");
+
+            gotoxy(49, 16);
+            printf("<");
+
+            break;
+        case 3:
+            gotoxy(17, 23);
+            printf(">");
+
+            gotoxy(49, 23);
+            printf("<");
+
+            break;
+    }
+
+    textcolor(WHITE);
+}
+
+
+/* Apaga as setas da opcao anterior */
+void apagaSetas(int option, Estado game_data){
+    textbackground(BLACK);
+    switch(option){
+        case 1:
+            gotoxy(17, 9);
+            printf(" ");
+
+            gotoxy(49, 9);
+            printf(" ");
+
+            break;
+        case 2:
+            gotoxy(17, 16);
+            printf(" ");
+
+            gotoxy(49, 16);
+            printf(" ");
+
+            break;
+        case 3:
+            gotoxy(17, 23);
+            printf(" ");
+
+            gotoxy(49, 23);
+            printf(" ");
+
+            break;
+    }
+}
+
+
+/* Desenha a interface do ranking */
+void desenha_ranking(Save ranking[MAX_SAVES]){
+    int i = 0, j = 0;
+
+    // Desenha o contorno
+    textbackground(YELLOW);
+
+    for(j = 0; j <= LINHAS_RANKING; j++){
+        if(j == 0 || j == 4 || j == LINHAS_RANKING){
+            for(i = 0; i <= COLUNAS_RANKING; i++){
+                gotoxy(i + 18, j + 9);
+                printf(" ");
+            }
+        } else {
+            gotoxy(18, j + 9);
+            printf(" ");
+
+            gotoxy(COLUNAS_RANKING + 18, j + 9);
+            printf(" ");
+        }
+    }
+
+    textbackground(BLACK);
+
+    // Escreve o titulo
+    textcolor(RED);
+    gotoxy(32, 11);
+    printf("RANKING");
+
+    textcolor(WHITE);
+
+    // Escreve o nome dos jogadores
+    for(i = 0; i < MAX_SAVES; i++){
+        gotoxy(20, i + 15);
+        printf("%20s     %6d\n", ranking[i].nome, ranking[i].score);
+    }
+}
+
 
 // Desenha a interface de vitoria
 void desenhaVitoria(){
@@ -473,6 +668,7 @@ void desenhaVitoria(){
 
     getch();
 }
+
 
 // Desenha a interface de derrota
 void desenhaDerrota(){
@@ -679,9 +875,11 @@ void desenhaDerrota(){
     gotoxy(53, 20);
     printf(" ");
 
+    // Retorna as cores default
     textbackground(BLACK);
     textcolor(WHITE);
 
+    // Efeito sonoro
     Beep(200, 300);
     Beep(400, 300);
     Beep(200, 600);
