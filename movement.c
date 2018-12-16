@@ -16,11 +16,11 @@ void mexeRato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], int x, int y, clock_t *tempo
             // Osso
             case 'O':
                 (estado_atual->jogador.ossos_restantes)--;
-                
+
                 // Ativa o modo cachorro
                 *tempo_inicial = clock();
                 estado_atual->jogador.status_cachorro = 1;
-                
+
                 // Efeito sonoro
                 Beep(750, 300);
 
@@ -90,43 +90,58 @@ void mexeRato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], int x, int y, clock_t *tempo
 }
 
 
-/* Movimenta os gatos */
+/* Movimenta os gatos */ 
 void mexeGato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual){
-    int x, y, k;
+    int x = 0, y = 0, k;
+    int dis_menor;
 
    for(k = 0; k < NUM_GATOS; k++){
-        // Caso o gato tenha colidido com uma parede, porta ou outro gato
-        if(estado_atual->gato[k].flag == 1){
-                estado_atual->gato[k].direcao = geraNumero(); // Gera um numero aletaroio de 0 a 3
-                estado_atual->gato[k].flag = 0;
-        }
+        dis_menor = disPontos(estado_atual->jogador.pos_atual.x, estado_atual->jogador.pos_atual.y, estado_atual->gato[k].pos_atual.x, estado_atual->gato[k].pos_atual.y);
 
-        // A partir do numero gerado, define-se uma direcao para o gato
-        switch(estado_atual->gato[k].direcao){
-                case 0:
-                    x = 1;
-                    y = 0;
-                    break;
-                case 1:
-                    x = -1;
-                    y =  0;
-                    break;
-                case 2:
+        if(disPontos(estado_atual->jogador.pos_atual.x, estado_atual->jogador.pos_atual.y, (estado_atual->gato[k].pos_atual.x + 1), estado_atual->gato[k].pos_atual.y) < dis_menor){
+            x = 1;
+            y = 0;
+        } else {
+            if(disPontos(estado_atual->jogador.pos_atual.x, estado_atual->jogador.pos_atual.y, (estado_atual->gato[k].pos_atual.x - 1), estado_atual->gato[k].pos_atual.y) < dis_menor){
+                x = -1;
+                y = 0;
+            } else {
+                if(disPontos(estado_atual->jogador.pos_atual.x, estado_atual->jogador.pos_atual.y, estado_atual->gato[k].pos_atual.x, (estado_atual->gato[k].pos_atual.y + 1)) < dis_menor){
                     x = 0;
                     y = 1;
-                    break;
-                case 3:
-                    x =  0;
-                    y = -1;
-                    break;
+                } else {
+                    if(disPontos(estado_atual->jogador.pos_atual.x, estado_atual->jogador.pos_atual.y, estado_atual->gato[k].pos_atual.x, (estado_atual->gato[k].pos_atual.y - 1)) < dis_menor){
+                        x = 0;
+                        y = -1;
+                    } else {
+                        if(pow((estado_atual->jogador.pos_atual.x - (estado_atual->gato[k].pos_atual.x + 1)),2) < pow((estado_atual->jogador.pos_atual.x - estado_atual->gato[k].pos_atual.x),2)){
+                            x = 1;
+                            y = 0;
+                        } else {
+                            if(pow((estado_atual->jogador.pos_atual.x - (estado_atual->gato[k].pos_atual.x - 1)),2) < pow((estado_atual->jogador.pos_atual.x - estado_atual->gato[k].pos_atual.x),2)){
+                                x = -1;
+                                y = 0;
+                            } else {
+                                if(pow((estado_atual->jogador.pos_atual.y - (estado_atual->gato[k].pos_atual.y + 1)),2) < pow((estado_atual->jogador.pos_atual.y - estado_atual->gato[k].pos_atual.y),2)){
+                                    x = 0;
+                                    y = 1;
+                                } else {
+                                    if(pow((estado_atual->jogador.pos_atual.y - (estado_atual->gato[k].pos_atual.y - 1)),2) < pow((estado_atual->jogador.pos_atual.y - estado_atual->gato[k].pos_atual.y),2)){
+                                        x = 0;
+                                        y = -1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
+        }
 
         //Checa se o tempo para mover o gato ja foi atingido
         if(((double)(clock() - estado_atual->gato[k].last_time)/CLOCKS_PER_SEC*1000) >= TEMPO_MG){
             // Verifica se o gato colidiu com uma parede, porta ou outro gato
-            if(mapa[estado_atual->gato[k].pos_atual.y + y][estado_atual->gato[k].pos_atual.x + x] == 'X' || mapa[estado_atual->gato[k].pos_atual.y + y][estado_atual->gato[k].pos_atual.x + x] == 'T' || mapa[estado_atual->gato[k].pos_atual.y + y][estado_atual->gato[k].pos_atual.x + x] == 'G'){
-                estado_atual->gato[k].flag = 1;
-            } else {
+            if(mapa[estado_atual->gato[k].pos_atual.y + y][estado_atual->gato[k].pos_atual.x + x] != 'X' && mapa[estado_atual->gato[k].pos_atual.y + y][estado_atual->gato[k].pos_atual.x + x] != 'T' && mapa[estado_atual->gato[k].pos_atual.y + y][estado_atual->gato[k].pos_atual.x + x] != 'G'){
                 // Verifica flag de sobreposicao do gato
                 switch(estado_atual->gato[k].comeu_queijo){
                     // Verifica se o gato havia se sobreposto a um queijo
@@ -134,7 +149,7 @@ void mexeGato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual){
                         estado_atual->gato[k].comeu_queijo = 0;
                         mapa[estado_atual->gato[k].pos_atual.y][estado_atual->gato[k].pos_atual.x] = 'Q';
                         break;
-                    // Verifica se o gato havia se sobreposto a um qosso
+                    // Verifica se o gato havia se sobreposto a um osso
                     case 2:
                         estado_atual->gato[k].comeu_queijo = 0;
                         mapa[estado_atual->gato[k].pos_atual.y][estado_atual->gato[k].pos_atual.x] = 'O';
@@ -195,7 +210,6 @@ void mexeGato(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual){
     }
 }
 
-
 /* Movimenta as portas */
 void mexePorta(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual, int *status_portas) {
     int k;
@@ -203,13 +217,19 @@ void mexePorta(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual, int *
     // Verifica se as postas se encontram no estado abertas ou fechadas
     if (estado_atual->status_portas == 0) {
         for(k = NUM_PORTAS - 1; k >= 0; k--){
-            if(mapa[estado_atual->porta[k].pos_porta.y + 1][estado_atual->porta[k].pos_porta.x + 1] != 'G' && mapa[estado_atual->porta[k].pos_porta.y + 1][estado_atual->porta[k].pos_porta.x + 1] != 'M'){
+            if(mapa[estado_atual->porta[k].pos_porta.y + 1][estado_atual->porta[k].pos_porta.x + 1] != 'G' && mapa[estado_atual->porta[k].pos_porta.y + 1][estado_atual->porta[k].pos_porta.x + 1] != 'M' && estado_atual->porta[k].flag == 0){
                 mapa[estado_atual->porta[k].pos_porta.y][estado_atual->porta[k].pos_porta.x] = ' ';
 
                 estado_atual->porta[k].pos_porta.x++;
                 estado_atual->porta[k].pos_porta.y++;
 
                 mapa[estado_atual->porta[k].pos_porta.y][estado_atual->porta[k].pos_porta.x] = 'T';
+            } else{
+                if(estado_atual->porta[k].flag == 0){
+                    estado_atual->porta[k].flag = 1;
+                } else {
+                   estado_atual->porta[k].flag = 0;
+                }
             }
         }
 
@@ -217,13 +237,19 @@ void mexePorta(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual, int *
         estado_atual->status_portas = 1;
     } else {
         for(k = 0; k < NUM_PORTAS; k++){
-            if(mapa[estado_atual->porta[k].pos_porta.y - 1][estado_atual->porta[k].pos_porta.x - 1] != 'G' && mapa[estado_atual->porta[k].pos_porta.y - 1][estado_atual->porta[k].pos_porta.x - 1] != 'M'){
+            if(mapa[estado_atual->porta[k].pos_porta.y - 1][estado_atual->porta[k].pos_porta.x - 1] != 'G' && mapa[estado_atual->porta[k].pos_porta.y - 1][estado_atual->porta[k].pos_porta.x - 1] != 'M' && estado_atual->porta[k].flag == 0){
               mapa[estado_atual->porta[k].pos_porta.y][estado_atual->porta[k].pos_porta.x] = ' ';
 
                 estado_atual->porta[k].pos_porta.x--;
                 estado_atual->porta[k].pos_porta.y--;
 
                 mapa[estado_atual->porta[k].pos_porta.y][estado_atual->porta[k].pos_porta.x] = 'T';
+            } else {
+                if(estado_atual->porta[k].flag == 0){
+                    estado_atual->porta[k].flag = 1;
+                } else {
+                   estado_atual->porta[k].flag = 0;
+                }
             }
         }
 

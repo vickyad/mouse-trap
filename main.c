@@ -13,7 +13,7 @@ int main() {
     /* Declaração de variáveis */
     Estado estado_atual = {{"", {0, 0}, {0, 0}, 0, NUM_VIDAS, 0, NUM_OSSOS, 0},
                           {{{0,0}, {0,0}, 0, 1, 0, 0}, {{0,0}, {0,0}, 0, 1, 0, 0}, {{0,0}, {0,0}, 0, 1, 0, 0}, {{0,0}, {0,0}, 0, 1, 0, 0}},
-                          {{{0,0}}, {{0,0}}, {{0,0}}, {{0,0}}, {{0,0}}, {{0,0}}, {{0,0}}}, 
+                          {{{0,0}, 0}, {{0,0}, 0}, {{0,0}, 0}, {{0,0}, 0}, {{0,0}, 0}, {{0,0}, 0}, {{0,0}, 0}}, 
                           {0}, 1, 0};
 
     clock_t tempo_inicial, tempo_decorrido;
@@ -71,7 +71,6 @@ int main() {
 
 
             // Desenha a interface principal do jogo
-            clrscr();
             desenhaInterface();
             desenhaMapa(mapa, estado_atual);
             desenhaInfo(estado_atual);
@@ -80,7 +79,7 @@ int main() {
         }
 
         // Teste se já chegou ao fim do jogo
-        if(estado_atual.nivel == 4){
+        if(estado_atual.nivel == NIVEL_MAX){
             desenhaVitoria();
 
             atualizaRanking(estado_atual.jogador);
@@ -153,7 +152,6 @@ int main() {
                 //Pausa o jogo
                 case 9:
                     if(status_pause == 0){
-                        clrscr();
                         desenhaInterface();
                         desenhaInfo(estado_atual);
                         desenhaPause();
@@ -173,21 +171,7 @@ int main() {
 
                 //Novo jogo
                 case 78:
-                    desenhaRetangulo();
-
-                    // Confere se o jogador realmente quer iniciar um novo jogo
-                    do{
-                        gotoxy(18,15);
-                        printf("Deseja iniciar um novo jogo?");
-                        gotoxy(18,17);
-                        printf("(S) - Sim   (N) - N%co", 198);
-                        gotoxy(18,18);
-                        resp = toupper(getch());
-
-                        if(resp != 'S' && resp != 'N'){
-                            printf("Resposta inv%clida", 160);
-                        }
-                    } while(resp != 'S' && resp != 'N');
+                    resp = aviso("Deseja iniciar um novo jogo?");
 
                     if(resp == 'S'){
                         novo_jogo = 1;
@@ -202,29 +186,12 @@ int main() {
 
                     option_save = selecionaSlot(estado_atual.actual_time);
 
-                    printf("Opcao escolhida: %d", option_save);
-
-                    clrscr();
                     desenhaInterface();
 
                     salvaJogo(mapa, estado_atual, option_save);
 
-                    // Verifica se o jogador deseja continuar no jogo atual
-                    do{
-                        //desenhaRetangulo();
-                        gotoxy(18,15);
-                        printf("Deseja voltar ao jogo?              ");
-                        gotoxy(18,17);
-                        printf("(S) - Sim   (N) - N%co", 198);
-                        gotoxy(18,18);
-                        resp_aux = toupper(getch());
-
-                        if(resp_aux != 'S' && resp_aux != 'N'){
-                            gotoxy(18,18);
-                            printf("Resposta inv%clida", 160);
-                        }
-                    } while(resp_aux != 'S' && resp_aux != 'N');
-
+                    resp_aux = aviso("Deseja voltar ao jogo?");
+                    
                     if(resp_aux == 'N'){
                         resp = 'S';
                         novo_jogo = 1;
@@ -236,9 +203,6 @@ int main() {
                 case 76:
                     option_save = selecionaSlot(estado_atual.actual_time);
 
-                    printf("Opcao escolhida: %d", option_save);
-
-                    clrscr();
                     desenhaInterface();
 
                     carregaJogo(mapa, &estado_atual, option_save);
@@ -247,7 +211,7 @@ int main() {
                     estado_atual.jogador.status_cachorro = 0;
 
                     localizaPosicoes(mapa, &estado_atual);
-                    clrscr();
+                    
                     desenhaInterface();
                     desenhaMapa(mapa, estado_atual);
                     desenhaInfo(estado_atual);
@@ -271,22 +235,7 @@ int main() {
 
             desenhaDerrota();
 
-            desenhaRetangulo();
-
-            // Verifica se o jogador deseja iniciar um novo jogo ou não
-            do{
-                gotoxy(18,15);
-                printf("Deseja tentar novamente?");
-                gotoxy(18,17);
-                printf("(S) - Sim   (N) - N%co", 198);
-                gotoxy(18,17);
-                resp = toupper(getch());
-
-                if(resp != 'S' && resp != 'N'){
-                    gotoxy(18,18);
-                    printf("Resposta inv%clida", 160);
-                }
-            } while(resp != 'S' && resp != 'N');
+            resp = aviso("Deseja tentar novamente?");
 
             if(resp == 'S'){
                 novo_jogo = 1;

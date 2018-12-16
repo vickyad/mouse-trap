@@ -142,7 +142,6 @@ void desenhaMapa(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado estado_atual) {
 /* Desenha retangulo que contem mensagens ao jogador */
 void desenhaRetangulo(){
     int i, j;
-    int x = 14, y = 11;
 
     textbackground(YELLOW);
 
@@ -170,6 +169,9 @@ void desenhaRetangulo(){
 /* Desenha esqueleto da interface principal */
 void desenhaInterface() {
     int i, j;
+
+    // Limpa a tela
+    clrscr();
 
     // Desenho da borda
     gotoxy(0, 0);
@@ -290,7 +292,6 @@ void desenhaInicio() {
 
 /* Desenha a interface de instruções */
 void desenhaInstrucoes(){
-    clrscr();
     desenhaInterface();
 
     // Mensagens
@@ -431,7 +432,7 @@ void desenhaSlots(Estado game_data){
     textbackground(BLACK);
 
     // Informacoes jogo 1
-    if(!(arq = fopen("Mousetrap_estado_atual1.bin", "r+b"))){
+    if(!(arq = fopen("saves/Mousetrap_estado_atual1.bin", "r+b"))){
         gotoxy(19, 9);
         printf("SLOT VAZIO");
     } else {
@@ -450,7 +451,7 @@ void desenhaSlots(Estado game_data){
     }
 
     // Informacoes jogo 2
-    if(!(arq = fopen("Mousetrap_estado_atual2.bin", "r+b"))){
+    if(!(arq = fopen("saves/Mousetrap_estado_atual2.bin", "r+b"))){
         gotoxy(19, 16);
         printf("SLOT VAZIO");
     } else {
@@ -469,7 +470,7 @@ void desenhaSlots(Estado game_data){
     }
 
     // Informacoes jogo 3
-    if(!(arq = fopen("Mousetrap_estado_atual3.bin", "r+b"))){
+    if(!(arq = fopen("saves/Mousetrap_estado_atual3.bin", "r+b"))){
         gotoxy(19, 23);
         printf("SLOT VAZIO");
     } else {
@@ -596,8 +597,6 @@ void desenha_ranking(Save ranking[MAX_SAVES]){
 
 // Desenha a interface de vitoria
 void desenhaVitoria(){
-    clrscr();
-
     desenhaInterface();
 
     // Fogo 1
@@ -672,7 +671,6 @@ void desenhaVitoria(){
 
 // Desenha a interface de derrota
 void desenhaDerrota(){
-    clrscr();
     desenhaInterface();
 
     textbackground(LIGHTRED);

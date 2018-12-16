@@ -5,8 +5,6 @@
 void inicio(Estado *estado_atual){
     int flag = 0;
 
-    clrscr();
-
     desenhaInterface();
     desenhaInicio();
 
@@ -56,10 +54,12 @@ void inicio(Estado *estado_atual){
             getch();
 
             fflush(stdin);
+
+            desenhaInterface();
             desenhaInicio();
         }
     } while(strlen(estado_atual->jogador.nome) > NOME_MAX || strlen(estado_atual->jogador.nome) < 1);
-    
+
     // Caso o primeiro nome digitado tenha sido pequeno demais
     if(flag == 2){
         gotoxy(18,14);
@@ -74,6 +74,30 @@ void inicio(Estado *estado_atual){
     }
 }
 
+char aviso(char str[FRASE_MAX]){
+    char resp;
+
+    desenhaInterface();
+    desenhaRetangulo();
+
+    // Verifica se o jogador deseja iniciar um novo jogo ou não
+    do{
+        gotoxy(18,15);
+        puts(str);
+        gotoxy(18,17);
+        printf("(S) - Sim   (N) - N%co", 198);
+        gotoxy(18,17);
+        resp = toupper(getch());
+
+        if(resp != 'S' && resp != 'N'){
+            gotoxy(18,18);
+            printf("Resposta inv%clida", 160);
+        }
+    } while(resp != 'S' && resp != 'N');
+
+    return resp;
+}
+
 /* Tela dos slots de save */
 int selecionaSlot(SYSTEMTIME actual_time){
     Estado game_data;
@@ -82,7 +106,6 @@ int selecionaSlot(SYSTEMTIME actual_time){
     int flag = 0;
     char tecla;
 
-    clrscr();
     desenhaInterface();
 
     desenhaSlots(game_data);
@@ -180,22 +203,11 @@ void localizaPosicoes(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual
 void removeCursor(){
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO info;
-   
+
     info.dwSize = 100;
     info.bVisible = FALSE;
-   
+
     SetConsoleCursorInfo(consoleHandle, &info);
-}
-
-
-/* Gera um numero aleatorio de 0 a 3 */
-int geraNumero(){
-    srand(time(NULL));
-    int num;
-
-    num = (rand() % 4);
-
-    return num;
 }
 
 
@@ -233,4 +245,13 @@ void ordenaVetor(Save vetor[MAX_SAVES]){
 
         i++;
     } while(i < MAX_SAVES - 1);
+}
+
+// Teste
+int disPontos(int x1, int y1, int x2, int y2){
+    int dis;
+
+    dis = sqrt(pow((x1 - x2), 2) + pow((y1 - y2), 2));
+
+    return dis;
 }

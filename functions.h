@@ -28,14 +28,16 @@
 #define MAX_SAVES 10
 #define NOME_MAX 20
 #define NOME_ARQUIVO 30
+#define FRASE_MAX 34
 
 /* Definicoes gerais */
 #define NUM_VIDAS 3
 #define NUM_GATOS 4
 #define NUM_OSSOS 4
 #define NUM_PORTAS 7
+#define NIVEL_MAX 4
 #define TEMPO_MC 5000
-#define TEMPO_MG 100
+#define TEMPO_MG 300
 
 
 /* ----------// Estruturas //---------- */
@@ -66,6 +68,7 @@ typedef struct{
 
 typedef struct{
     Coord pos_porta;
+    int flag;
 } Porta;
 
 typedef struct{
@@ -111,6 +114,7 @@ void desenhaDerrota();
 /* Telas */
 void inicio(Estado *Estado_atual);
 int selecionaSlot(SYSTEMTIME actual_time);
+char aviso(char str[FRASE_MAX]);
 
 /* Obtencao de coordenadas */
 void localizaPosicoes(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual);
@@ -134,4 +138,6 @@ int geraNumero();
 int atualizaVetor(Save ranking[MAX_SAVES], Jogador last_win);
 void ordenaVetor(Save vetor[MAX_SAVES]);
 
+/* Teste */
+int disPontos(int x1, int y1, int x2, int y2);
 #endif // FUNCTIONS_H_INCLUDED

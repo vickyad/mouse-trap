@@ -37,7 +37,7 @@ void salvaJogo(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado estado_atual, int op
     int i, j, flag;
 
     // Gera o nome do arquivo correto a se abrir (varia de acordo com o nivel)
-    snprintf(nome_arquivo, NOME_ARQUIVO, "%s%d%s", "Mousetrap_save", option, ".txt");
+    snprintf(nome_arquivo, NOME_ARQUIVO, "%s%d%s", "saves/Mousetrap_save", option, ".txt");
 
     // Arquivo txt (onde fica contido o mapa)
     arq1 = fopen(nome_arquivo, "w");
@@ -57,7 +57,7 @@ void salvaJogo(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado estado_atual, int op
 
 
     // Gera o nome do arquivo correto a se abrir (varia de acordo com o nivel)
-    snprintf(nome_arquivo, NOME_ARQUIVO, "%s%d%s", "Mousetrap_estado_atual", option, ".bin");
+    snprintf(nome_arquivo, NOME_ARQUIVO, "%s%d%s", "saves/Mousetrap_estado_atual", option, ".bin");
 
     // Arquivo bin (onde ficam contidos os status e informacoes importantes do jogo)
     arq2 = fopen(nome_arquivo, "w+b");
@@ -95,7 +95,7 @@ void carregaJogo(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual, int
 
     // Arquivo txt (onde fica contido o mapa)
     // Gera o nome do arquivo correto a se abrir (varia de acordo com o nivel)
-    snprintf(nome_arquivo, NOME_ARQUIVO, "%s%d%s", "Mousetrap_save", option, ".txt");
+    snprintf(nome_arquivo, NOME_ARQUIVO, "%s%d%s", "saves/Mousetrap_save", option, ".txt");
 
     arq1 = fopen(nome_arquivo, "r");
 
@@ -112,7 +112,7 @@ void carregaJogo(char mapa[LINHAS_MAPA][COLUNAS_MAPA], Estado *estado_atual, int
 
     // Arquivo bin (onde ficam contidos os status e informacoes importantes do jogo)
     // Gera o nome do arquivo correto a se abrir (varia de acordo com o nivel)
-    snprintf(nome_arquivo, NOME_ARQUIVO, "%s%d%s", "Mousetrap_estado_atual", option, ".bin");
+    snprintf(nome_arquivo, NOME_ARQUIVO, "%s%d%s", "saves/Mousetrap_estado_atual", option, ".bin");
 
     arq2 = fopen(nome_arquivo, "r+b");
     fread(&estado_atual, sizeof(Estado), 1, arq2);
@@ -152,6 +152,7 @@ void atualizaRanking(Jogador last_win){
 
     if(!(arq = fopen("ranking.bin", "rb"))){
         printf("Erro na leitura do arquivo");
+        getch();
     } else {
         leRanking(arq, ranking);
 
@@ -165,6 +166,7 @@ void atualizaRanking(Jogador last_win){
 
             if(!(arq = fopen("ranking.bin", "wb"))){
                 printf("Erro na escrita do arquivo");
+                getch();
             } else {
                 salvaRanking(arq, ranking);
 
@@ -173,7 +175,6 @@ void atualizaRanking(Jogador last_win){
         }
     }
 
-    clrscr();
     desenhaInterface();
 
     desenha_ranking(ranking);
