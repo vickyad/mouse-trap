@@ -1,7 +1,7 @@
 # INF01202 Algoritmos e Programação
-## Semestre 2018/2
-### **Professores:** Edison Pignaton de Freitas e  Joel Luis Carbonera
+### Semestre 2018/2
+#### **Professores:** Edison Pignaton de Freitas e  Joel Luis Carbonera
 
-# MouseTrap
+## MouseTrap
 > Jogo em C inspirado em MouseTrap
 > Você é um rato que deseja comer os deliciosos queijos. Mas, tome cuidado com os gatos!
