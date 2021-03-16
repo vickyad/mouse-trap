@@ -1,5 +1,7 @@
-# mouse-trap
-Jogo em C inspirado em MouseTrap
-Semestre 2018/2
-Cadeira:INF01202 Algoritmos e Programação
-Professores: Edison Pignaton de Freitas e  Joel Luis Carbonera
+# INF01202 Algoritmos e Programação
+## Semestre 2018/2
+### **Professores:** Edison Pignaton de Freitas e  Joel Luis Carbonera
+
+# MouseTrap
+> Jogo em C inspirado em MouseTrap
+> Você é um rato que deseja comer os deliciosos queijos. Mas, tome cuidado com os gatos!
